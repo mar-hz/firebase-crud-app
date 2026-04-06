@@ -38,10 +38,15 @@ export default function Home() {
     fetchItems();
   };
 
-  const handleEdit = async (id: string, currentName: string) => {
-    const editValue = prompt('Enter the new name', currentName);
-    if (!editValue?.trim()) return;
-    await updateDoc(doc(db, 'items', id), { name: editValue });
+  const handleEdit = async (id: string, currentTitle: string, currentDesc: string, currentCourse: string) => {
+    const editTitleValue = prompt('Título:', currentTitle);
+    if (!editTitleValue?.trim()) return;
+    const editDescValue = prompt('Descripción:', currentDesc);
+    if (!editDescValue?.trim()) return;
+    const editCourseValue = prompt('Curso:', currentCourse);
+    if (!editCourseValue?.trim()) return;
+
+    await updateDoc(doc(db, 'items', id), { title: editTitleValue, description: editDescValue, course: editCourseValue });
     fetchItems();
   };
 
@@ -66,27 +71,28 @@ export default function Home() {
 
   return (
     <div className="font-sans min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <h1 className="text-3xl font-bold mb-6">Organizador de Tareas</h1>
+      <h1 className="text-3xl font-bold mb-4">Organizador de Tareas</h1>
+      <h4 className="text-lg font-semibold mb-2">Agregar tarea:</h4>
       
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
         <input
           type="text"
           className="border-2 px-3 py-2 rounded"
-          placeholder="Title"
+          placeholder="Título"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
         <input
           type="text"
           className="border-2 px-3 py-2 rounded"
-          placeholder="Description"
+          placeholder="Descripción"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
         <input
           type="text"
           className="border-2 px-3 py-2 rounded"
-          placeholder="Course"
+          placeholder="Curso"
           value={course}
           onChange={(e) => setCourse(e.target.value)}
         />
@@ -97,7 +103,7 @@ export default function Home() {
             checked={isCompleted}
             onChange={(e) => setIsCompleted(e.target.checked)}
           />
-          Completed
+          Completado
         </label>
 
         <button
@@ -126,19 +132,19 @@ export default function Home() {
                   checked={item.isCompleted}
                   onChange={() => handleToggleComplete(item.id, item.isCompleted)}
                 />
-                Completed
+                Completado
               </label>
               <button
                 className="border px-3 py-1 rounded bg-indigo-600 text-white"
-                onClick={() => handleEdit(item.id, item.title)}
+                onClick={() => handleEdit(item.id, item.title, item.description, item.course)}
               >
-                Edit
+                Editar
               </button>
               <button
                 className="border px-3 py-1 rounded bg-red-500 text-white"
                 onClick={() => handleDelete(item.id)}
               >
-                Delete
+                Eliminar
               </button>
             </div>
           </li>
